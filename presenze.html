@@ -3,80 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presenze Giocatori</title>
+    <title>Presenze FC25 ProClub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
         }
-        table {
+        header {
+            background-color: #d11a2a; /* Colore rosso FC25 */
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
             margin: 20px auto;
-            border-collapse: collapse;
-            width: 60%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        th, td {
-            padding: 10px;
+        .presenza-form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .presenza-form label {
+            margin: 5px 0;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
             border: 1px solid #ccc;
-            text-align: center;
+        }
+        .button {
+            background-color: #28a745; /* Verde per il successo */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .presenze-list {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        .presenze-list li {
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
         }
         .presente {
-            background-color: #4CAF50; /* Verde */
+            background-color: #28a745; /* Verde per Presente */
             color: white;
-            cursor: pointer;
         }
         .assente {
-            background-color: #F44336; /* Rosso */
+            background-color: #d9534f; /* rosso per Assente */
             color: white;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h2>Presenze Giocatori</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome Giocatore</th>
-                <th>Presenza</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Giocatore 1</td>
-                <td onclick="selezionaPresenza(this)">Seleziona</td>
-            </tr>
-            <tr>
-                <td>Giocatore 2</td>
-                <td onclick="selezionaPresenza(this)">Seleziona</td>
-            </tr>
-            <!-- Aggiungi più righe per ogni giocatore -->
-        </tbody>
-    </table>
 
-    <button onclick="salvaPresenze()">Salva Presenze</button>
+<header>
+    <h1>Gestione Presenze SportingEsports</h1>
+</header>
 
-    <script>
-        function selezionaPresenza(cell) {
-            if (cell.classList.contains('presente')) {
-                cell.className = 'assente';
-                cell.textContent = 'Assente';
-            } else {
-                cell.className = 'presente';
-                cell.textContent = 'Presente';
-            }
+<div class="container">
+    <h2>Seleziona la tua presenza</h2>
+    <form class="presenza-form" id="presenzaForm">
+        <label for="playerName">Nome Giocatore:</label>
+        <input type="text" id="playerName" placeholder="Inserisci il tuo nome" required>
+
+        <label for="status">Stato:</label>
+        <select id="status" required>
+            <option value="">Seleziona...</option>
+            <option value="presente">Presente</option>
+            <option value="assente">Assente</option>
+        </select>
+
+        <button type="submit" class="button">Invia Presenza</button>
+    </form>
+
+    <h2>Riepilogo Presenze</h2>
+    <ul class="presenze-list" id="presenzeList">
+        <!-- Le presenze verranno visualizzate qui -->
+    </ul>
+</div>
+
+<script>
+    const presenzaForm = document.getElementById('presenzaForm');
+    const presenzeList = document.getElementById('presenzeList');
+    
+    presenzaForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const playerName = document.getElementById('playerName').value.trim();
+        const status = document.getElementById('status').value;
+        
+        if (playerName && status) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${playerName} - ${status === 'presente' ? 'Presente' : 'Assente'}`;
+            listItem.classList.add(status === 'presente' ? 'presente' : 'assente');
+            presenzeList.appendChild(listItem);
+
+            // Reset form
+            presenzaForm.reset();
+        } else {
+            alert('Per favore, compila tutti i campi.');
         }
+    });
+</script>
 
-        function salvaPresenze() {
-            const presenze = [];
-            document.querySelectorAll('tbody tr').forEach(row => {
-                const nome = row.cells[0].textContent;
-                const stato = row.cells[1].textContent;
-                presenze.push({ nome, stato });
-            });
-            // Salva i dati nel LocalStorage
-            localStorage.setItem('presenze', JSON.stringify(presenze));
-            alert("Presenze salvate!");
-        }
-    </script>
 </body>
 </html>
